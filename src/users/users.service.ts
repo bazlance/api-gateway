@@ -4,19 +4,21 @@ import { UpdateUserDto } from './dto/update-user.dto';
 
 @Injectable()
 export class UsersService {
-  httpService: any;
   create(createUserDto: CreateUserDto) {
     return 'This action adds a new user';
   }
 
-  findAll(req: any) {
+  async findAll(req: any) {
     const authorization = req.headers.authorization;
 
-    return this.httpService.get('http://localhost:3000/user/profile', {
+    const response = await fetch('http://localhost:3000/user/profile', {
       headers: {
         Authorization: authorization,
       },
     });
+
+    const data = await response.json();
+    return data;
   }
 
   findOne(id: number) {

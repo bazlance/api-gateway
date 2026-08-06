@@ -13,7 +13,7 @@ export class UsersService {
     return 'This action adds a new user';
   }
 
-  async findAll(authorization: string) {
+  async getProfile(authorization: string) {
     try {
       const { data } = await firstValueFrom(
         this.httpService.get('http://localhost:3000/user/profile', {

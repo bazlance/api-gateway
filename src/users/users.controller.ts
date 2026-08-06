@@ -23,8 +23,8 @@ export class UsersController {
   }
 
   @Get()
-  findAll(@Headers('authorization') authorization: string) {
-    return this.usersService.findAll(authorization);
+  getProfile(@Headers('authorization') authorization: string) {
+    return this.usersService.getProfile(authorization);
   }
 
   @Get(':id')

@@ -8,14 +8,16 @@ export class UsersService {
     return 'This action adds a new user';
   }
 
-  async findAll(req: any) {
-    const authorization = req.headers.authorization;
-
+  async findAll(authorization: string) {
     const response = await fetch('http://localhost:3000/user/profile', {
       headers: {
         Authorization: authorization,
       },
     });
+
+    if (!response.ok) {
+      throw new Error(`Request failed: ${response.status}`);
+    }
 
     const data = await response.json();
     return data;

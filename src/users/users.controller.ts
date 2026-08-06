@@ -7,6 +7,7 @@ import {
   Param,
   Delete,
   Req,
+  Headers,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -22,8 +23,8 @@ export class UsersController {
   }
 
   @Get()
-  findAll(@Req() req: Request) {
-    return this.usersService.findAll(req);
+  findAll(@Headers('authorization') authorization: string) {
+    return this.usersService.findAll(authorization);
   }
 
   @Get(':id')

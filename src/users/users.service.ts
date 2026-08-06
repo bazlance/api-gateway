@@ -46,7 +46,6 @@ export class UsersService {
       const err = error as AxiosError;
 
       if (!err.response) {
-        console.log('err', err);
         throw new BadGatewayException('User service is unavailable');
       }
 

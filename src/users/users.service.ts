@@ -1,26 +1,37 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { HttpService } from '@nestjs/axios';
+import { firstValueFrom } from 'rxjs';
+import { AxiosError } from 'axios';
 
 @Injectable()
 export class UsersService {
+  constructor(private readonly httpService: HttpService) {}
+
   create(createUserDto: CreateUserDto) {
     return 'This action adds a new user';
   }
 
   async findAll(authorization: string) {
-    const response = await fetch('http://localhost:3000/user/profile', {
-      headers: {
-        Authorization: authorization,
-      },
-    });
+    try {
+      const { data } = await firstValueFrom(
+        this.httpService.get('http://localhost:3000/user/profile', {
+          headers: {
+            Authorization: authorization,
+          },
+        }),
+      );
 
-    if (!response.ok) {
-      throw new Error(`Request failed: ${response.status}`);
+      return data;
+    } catch (error) {
+      const err = error as AxiosError;
+
+      throw new HttpException(
+        err.response?.data ?? 'Unknown error',
+        err.response?.status ?? 500,
+      );
     }
-
-    const data = await response.json();
-    return data;
   }
 
   findOne(id: number) {

@@ -54,7 +54,10 @@ export class UsersController {
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.usersService.remove(+id);
+  remove(
+    @Headers('authorization') authorization: string,
+    @Param('id') id: string,
+  ) {
+    return this.usersService.remove(authorization, id);
   }
 }

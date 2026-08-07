@@ -146,7 +146,28 @@ export class UsersService {
     }
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} user`;
+  async remove(authorization: string, id: string) {
+    try {
+      const { data } = await firstValueFrom(
+        this.httpService.delete(`http://localhost:3000/user/${id}`, {
+          headers: {
+            Authorization: authorization,
+          },
+        }),
+      );
+
+      return data;
+    } catch (error) {
+      const err = error as AxiosError;
+
+      if (!err.response) {
+        throw new BadGatewayException('User service is unavailable');
+      }
+
+      throw new HttpException(
+        err.response?.data ?? 'Unknown error',
+        err.response?.status ?? 500,
+      );
+    }
   }
 }

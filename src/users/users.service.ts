@@ -80,8 +80,37 @@ export class UsersService {
     return `This action returns a #${id} user`;
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
+  async update(
+    authorization: string,
+    id: string,
+    updateUserDto: UpdateUserDto,
+  ) {
+    try {
+      const { data } = await firstValueFrom(
+        this.httpService.patch(
+          `http://localhost:3000/user/${id}`,
+          updateUserDto,
+          {
+            headers: {
+              Authorization: authorization,
+            },
+          },
+        ),
+      );
+
+      return data;
+    } catch (error) {
+      const err = error as AxiosError;
+
+      if (!err.response) {
+        throw new BadGatewayException('User service is unavailable');
+      }
+
+      throw new HttpException(
+        err.response?.data ?? 'Unknown error',
+        err.response?.status ?? 500,
+      );
+    }
   }
 
   remove(id: number) {

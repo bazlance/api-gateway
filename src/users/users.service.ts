@@ -80,13 +80,22 @@ export class UsersService {
     }
   }
 
-  async search(
-    authorization: string,
-    query: string,
-    page: number = 1,
-    limit: number = 10,
-  ) {
+  async search({
+    authorization,
+    query,
+    page = 1,
+    limit = 10,
+  }: {
+    authorization: string;
+    query: string;
+    page?: number;
+    limit?: number;
+  }) {
     try {
+      console.log(authorization);
+      console.log(query);
+      console.log(page);
+      console.log(limit);
       const { data } = await firstValueFrom(
         this.httpService.get(
           `http://localhost:3000/user/search?query=${query}&page=${page}&limit=${limit}`,

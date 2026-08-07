@@ -27,7 +27,7 @@ export class UsersController {
     return this.usersService.login(body);
   }
 
-  @Get()
+  @Get('profile')
   getProfile(@Headers('authorization') authorization: string) {
     return this.usersService.getProfile(authorization);
   }

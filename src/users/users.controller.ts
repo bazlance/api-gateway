@@ -7,6 +7,8 @@ import {
   Param,
   Delete,
   Headers,
+  Query,
+  ParseIntPipe,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -32,9 +34,14 @@ export class UsersController {
     return this.usersService.getProfile(authorization);
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.usersService.findOne(+id);
+  @Get('search')
+  search(
+    @Headers('authorization') authorization: string,
+    @Query('query') query: string,
+    @Query('page', ParseIntPipe) page: number,
+    @Query('limit', ParseIntPipe) limit: number,
+  ) {
+    return this.usersService.search(authorization, query, page, limit);
   }
 
   @Patch(':id')

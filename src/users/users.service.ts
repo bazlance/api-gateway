@@ -48,6 +48,10 @@ export class UsersService {
     } catch (error) {
       const err = error as AxiosError;
 
+      if (!err.response) {
+        throw new BadGatewayException('User service is unavailable');
+      }
+
       throw new HttpException(
         err.response?.data ?? 'Unknown error',
         err.response?.status ?? 500,
@@ -76,8 +80,37 @@ export class UsersService {
     }
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} user`;
+  async search(
+    authorization: string,
+    query: string,
+    page: number = 1,
+    limit: number = 10,
+  ) {
+    try {
+      const { data } = await firstValueFrom(
+        this.httpService.get(
+          `http://localhost:3000/user/search?query=${query}&page=${page}&limit=${limit}`,
+          {
+            headers: {
+              Authorization: authorization,
+            },
+          },
+        ),
+      );
+
+      return data;
+    } catch (error) {
+      const err = error as AxiosError;
+
+      if (!err.response) {
+        throw new BadGatewayException('User service is unavailable');
+      }
+
+      throw new HttpException(
+        err.response?.data ?? 'Unknown error',
+        err.response?.status ?? 500,
+      );
+    }
   }
 
   async update(

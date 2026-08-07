@@ -41,7 +41,7 @@ export class UsersController {
     @Query('page', ParseIntPipe) page: number,
     @Query('limit', ParseIntPipe) limit: number,
   ) {
-    return this.usersService.search({ page, query, limit, authorization });
+    return this.usersService.search({ page, limit, query, authorization });
   }
 
   @Patch(':id')

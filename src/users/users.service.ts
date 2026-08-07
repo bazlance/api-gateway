@@ -80,31 +80,26 @@ export class UsersService {
     }
   }
 
-  async search({
-    authorization,
-    query,
-    page = 1,
-    limit = 10,
-  }: {
+  async search(params: {
     authorization: string;
     query: string;
     page?: number;
     limit?: number;
   }) {
     try {
-      console.log(authorization);
-      console.log(query);
-      console.log(page);
-      console.log(limit);
       const { data } = await firstValueFrom(
-        this.httpService.get(
-          `http://localhost:3000/user/search?query=${query}&page=${page}&limit=${limit}`,
-          {
-            headers: {
-              Authorization: authorization,
-            },
-          },
-        ),
+        // this.httpService.get(
+        //   `http://localhost:3000/user/search?query=${params.query}&page=${params.page}&limit=${params.limit}`,
+        //   {
+        //     headers: {
+        //       Authorization: params.authorization,
+        //     },
+        //   },
+        // ),
+        this.httpService.get('http://localhost:3000/user/search', {
+          headers: { Authorization: params.authorization },
+          params,
+        }),
       );
 
       return data;

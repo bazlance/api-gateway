@@ -10,8 +10,28 @@ import { LoginDto } from './dto/login.dto';
 export class UsersService {
   constructor(private readonly httpService: HttpService) {}
 
-  create(createUserDto: CreateUserDto) {
-    return 'This action adds a new user';
+  async create(createUserDto: CreateUserDto) {
+    try {
+      const { data } = await firstValueFrom(
+        this.httpService.post(
+          'http://localhost:3000/user/register',
+          createUserDto,
+        ),
+      );
+
+      return data;
+    } catch (error) {
+      const err = error as AxiosError;
+
+      if (!err.response) {
+        throw new BadGatewayException('User service is unavailable');
+      }
+
+      throw new HttpException(
+        err.response?.data ?? 'Unknown error',
+        err.response?.status ?? 500,
+      );
+    }
   }
 
   async getProfile(authorization: string) {
